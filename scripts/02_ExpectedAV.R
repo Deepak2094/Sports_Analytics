@@ -27,32 +27,23 @@
   ggplot(drafted, aes(Pick, Avg_AV_Pick)) + geom_point() + geom_line(aes(Pick, expect_AV, color='red'),size=1.5)
   ggplot(drafted, aes(Pick, AV_game)) + geom_point()
   ggplot(drafted, aes(Pick, AV_game)) + geom_point() + geom_line(aes(Pick, expect_AV, color='red'),size=1.5)
-  ggplot(drafted, aes(Pick, AV_game)) + geom_point(aes(color = pos_draft)) + geom_line(aes(Pick, expect_AV, color='red'),size=1.5)
-  ggplot(drafted, aes(Pick, AV_game)) + geom_point(aes(color = FRANCHISE)) + geom_line(aes(Pick, expect_AV, color='red'),size=1.5)
+  # ggplot(drafted, aes(Pick, AV_game)) + geom_point(aes(color = pos_draft)) + geom_line(aes(Pick, expect_AV, color='red'),size=1.5)
+  # ggplot(drafted, aes(Pick, AV_game)) + geom_point(aes(color = FRANCHISE)) + geom_line(aes(Pick, expect_AV, color='red'),size=1.5)
   
   
 # value above expected
   drafted$VAE <- drafted$AV_game - drafted$expect_AV
 
-  drafted[,c("player_name_pfr","pos_draft","AV_game","expect_AV","VAE","college_combine","draft_year")][order(-VAE)] 
-  drafted[,mean(VAE), by=pos_draft]
-  drafted[,mean(VAE), by=draft_team_name][order(-V1)]
-  table(drafted$draft_team_name,exclude = NULL)
-  table(drafted$Tm,exclude = NULL)
-  table(drafted$FRANCHISE,exclude = NULL)
-  
-  length(unique(drafted$FRANCHISE))
-  drafted[FRANCHISE=="LVR",]
-  drafted[draft_team_name%like%"Raiders",]
-  
-  # change FRANCHISE LVR to RAI
+  drafted[,c("player_name_pfr","pos_draft","AV_game","expect_AV","VAE","college_combine","draft_year","Pick")][order(-VAE)]
+# change FRANCHISE LVR to RAI
   drafted$FRANCHISE[drafted$FRANCHISE =="LVR"] <- "RAI"
   str(drafted)
   drafted[,mean(VAE), by=FRANCHISE][order(-V1)]
+  drafted[,mean(VAE), by=pos_draft][order(-V1)]
   
+  drafted[,mean(VAE), by=Rnd][order(-V1)][order(Rnd)]
   
-  
-#### do this for every position ####
+#### do this for every position?? I actually don't think this is necessary ####
   table(drafted$pos_draft, exclude = NULL)
   drafted[,mean(VAE), by=FRANCHISE][order(-V1)]
   drafted[,mean(VAE), by=pos_draft][order(-V1)]
@@ -72,6 +63,9 @@
 
   Oline$VAE <- Oline$AV_game - Oline$expect_AV_pos
   Oline[,mean(VAE), by=FRANCHISE][order(-V1)]
+  
+  
+  
   
     
   
