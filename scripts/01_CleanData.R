@@ -48,14 +48,23 @@
   data$Career_AV <- ifelse(data$Career_AV<0,0,data$Career_AV)
   data$Draft_AV <- ifelse(data$Draft_AV<0,0,data$Draft_AV)
   
-  # players with NA for Career_AV likely means they did not play in any games
+  # players with NA for Career_AV
   table(data[is.na(Career_AV),]$Career_AV, data[is.na(Career_AV),]$G, exclude = NULL)
+  table(data[is.na(G) | G<5,]$Career_AV, data[is.na(G) | G<5,]$G, exclude = NULL)
+  data[is.na(Career_AV) & G>=0,]
+  data[Career_AV<1 & G<5,]
+  
   # this is a decision we need to make, but I think we should make all NAs to 0, and...
   # we should change add 1 to all Non NA Career_AV values. This was we can differentiate players with 0 AV to players who never even played a game.
   # Created a new variable called Career_AV_New for now
-  data$Career_AV_New <- data$Career_AV + 1
+  # data$Career_AV_New <- data$Career_AV + 1
+  # data$Career_AV_New <- ifelse(is.na(data$Career_AV_New),0,data$Career_AV_New)
+  # table(data$Career_AV_New, exclude = NULL)
+  data$Career_AV_New <- data$Career_AV
   data$Career_AV_New <- ifelse(is.na(data$Career_AV_New),0,data$Career_AV_New)
-  table(data$Career_AV_New, exclude = NULL) 
+  table(data$Career_AV_New, exclude = NULL)
+
+  
   
   
 # view missing data - lots of missing data
@@ -65,6 +74,21 @@
   # Change NA to 0 for these variables
   stats <- c("G","Passing_Cmp","Passing_Att","Passing_Yds","Passing_TD","Passing_Int","Rushing_Att","Rushing_Yds","Rushing_TD","Receiving_Rec","Receiving_Yds","Receiving_TD","Solo","Int","Sk")
   data[,(stats) := lapply(.SD,nafill,fill=0),.SDcols = stats]
+  
+### Need to find the average approximate value per game
+  data[Career_AV_New>140,]
+  data$AV_game <- round((data$Career_AV_New/data$G), digits = 2)
+  
+  table(data$Career_AV_New, exclude = NULL)
+  table(data$G, exclude = NULL)
+  
+  table(data$AV_game, exclude = NULL)
+  data[AV_game=="NaN",]
+  data[AV_game==0,]
+  
+  
+# create csv of the data called clean_data.csv so it is easier to work with
+  write.csv(data,"../data/clean_data.csv", row.names = F)  
   
   
 ################## Combine Data plus Draft Pick and Career_AV ###########################################################################################  
